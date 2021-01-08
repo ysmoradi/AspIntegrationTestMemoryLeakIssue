@@ -44,16 +44,16 @@ namespace AspIntegrationTestMemoryLeakIssue
 
         [DataTestMethod]
         [DataRow, DataRow, DataRow]
-        public async Task TestServerTest_GenericHost()
+        public async Task TestServerTest_GenericHost() // no issue! (See Additional context at bottom of issue)
         {
             using IHost host = new HostBuilder()
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureWebHostDefaults(webHostBuilder =>
                 {
                     webHostBuilder
-                      .UseTestServer()
-                      .UseUrls("http://localhost/")
-                      .UseStartup<Startup2>();
+                        .UseTestServer()
+                        .UseUrls("http://localhost/")
+                        .UseStartup<Startup2>();
                 })
                 .Build();
 
@@ -65,7 +65,7 @@ namespace AspIntegrationTestMemoryLeakIssue
         }
     }
 
-    public class Startup1
+    public class Startup1 // web host builder
     {
         public virtual IServiceProvider ConfigureServices(IServiceCollection services)
         {
@@ -92,16 +92,16 @@ namespace AspIntegrationTestMemoryLeakIssue
         }
     }
 
-    public class Startup2
+    public class Startup2 // generic host
     {
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            
+
         }
 
         public virtual void ConfigureServices(IServiceCollection services)
         {
-            
+
         }
 
         public void Configure(IApplicationBuilder app)
