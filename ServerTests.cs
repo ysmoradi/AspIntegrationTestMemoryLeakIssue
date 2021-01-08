@@ -19,7 +19,7 @@ namespace AspIntegrationTestMemoryLeakIssue
     {
         [DataTestMethod]
         [DataRow, DataRow, DataRow]
-        public async Task RealServerTest()
+        public async Task RealServerTest() // no issue! (See Additional context at bottom of issue)
         {
             using var webHost = WebHost.CreateDefaultBuilder()
                 .UseUrls("http://localhost/")
@@ -44,7 +44,7 @@ namespace AspIntegrationTestMemoryLeakIssue
 
         [DataTestMethod]
         [DataRow, DataRow, DataRow]
-        public async Task TestServerTest_GenericHost() // no issue! (See Additional context at bottom of issue)
+        public async Task TestServerTest_GenericHost()
         {
             using IHost host = new HostBuilder()
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
