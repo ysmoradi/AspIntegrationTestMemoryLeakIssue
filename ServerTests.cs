@@ -19,7 +19,7 @@ namespace AspIntegrationTestMemoryLeakIssue
     {
         [DataTestMethod]
         [DataRow, DataRow, DataRow]
-        public async Task TestServerTest_GenericHost() // no issue! (See Additional context at bottom of issue)
+        public async Task TestServerTest_GenericHost()
         {
             using IHost host = new HostBuilder()
                 .UseServiceProviderFactory(new DryIocServiceProviderFactory())
