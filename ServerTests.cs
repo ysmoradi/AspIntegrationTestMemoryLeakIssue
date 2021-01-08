@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AspIntegrationTestMemoryLeakIssue
@@ -33,11 +36,25 @@ namespace AspIntegrationTestMemoryLeakIssue
             using TestServer server = host.GetTestServer();
 
             Assert.AreEqual("Hello World!", (await (await server.CreateClient().GetAsync("/")).EnsureSuccessStatusCode().Content.ReadAsStringAsync()));
+
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced);
+
+            Assert.AreEqual(1, GCContainer.References.Count(r => r.IsAlive));
         }
+    }
+
+    public static class GCContainer
+    {
+        public static List<WeakReference> References { get; set; } = new List<WeakReference>();
     }
 
     public class Startup2 // generic host
     {
+        public Startup2()
+        {
+            GCContainer.References.Add(new WeakReference(this));
+        }
+
         public void ConfigureContainer(ServiceRegistry services)
         {
 
