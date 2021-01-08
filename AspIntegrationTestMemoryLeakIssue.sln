@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30803.129
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspIntegrationTestMemoryLeakIssue", "AspIntegrationTestMemoryLeakIssue.csproj", "{54999D78-DFDF-40D1-8954-32D3F7F496CE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{54999D78-DFDF-40D1-8954-32D3F7F496CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54999D78-DFDF-40D1-8954-32D3F7F496CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54999D78-DFDF-40D1-8954-32D3F7F496CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54999D78-DFDF-40D1-8954-32D3F7F496CE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F38B9EB2-7FEA-4408-98F8-CC1916FC80CA}
+	EndGlobalSection
+EndGlobal
