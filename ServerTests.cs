@@ -1,6 +1,5 @@
-using Autofac;
-using Autofac.Extensions.DependencyInjection;
-using Microsoft.AspNetCore;
+using DryIoc;
+using DryIoc.Microsoft.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -8,8 +7,6 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace AspIntegrationTestMemoryLeakIssue
@@ -19,35 +16,10 @@ namespace AspIntegrationTestMemoryLeakIssue
     {
         [DataTestMethod]
         [DataRow, DataRow, DataRow]
-        public async Task RealServerTest()
-        {
-            using var webHost = WebHost.CreateDefaultBuilder()
-                .UseUrls("http://localhost/")
-                .UseStartup<Startup1>()
-                .Build();
-
-            await webHost.StartAsync();
-
-            using HttpClient client = new();
-
-            Assert.AreEqual("Hello World!", (await (await client.GetAsync("http://localhost/")).EnsureSuccessStatusCode().Content.ReadAsStringAsync()));
-        }
-
-        [DataTestMethod]
-        [DataRow, DataRow, DataRow]
-        public async Task TestServerTest_WebHost()
-        {
-            using TestServer server = new(WebHost.CreateDefaultBuilder().UseUrls("http://localhost/").UseStartup<Startup1>());
-
-            Assert.AreEqual("Hello World!", (await (await server.CreateClient().GetAsync("/")).EnsureSuccessStatusCode().Content.ReadAsStringAsync()));
-        }
-
-        [DataTestMethod]
-        [DataRow, DataRow, DataRow]
         public async Task TestServerTest_GenericHost() // no issue! (See Additional context at bottom of issue)
         {
             using IHost host = new HostBuilder()
-                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                .UseServiceProviderFactory(new DryIocServiceProviderFactory())
                 .ConfigureWebHostDefaults(webHostBuilder =>
                 {
                     webHostBuilder
@@ -65,39 +37,12 @@ namespace AspIntegrationTestMemoryLeakIssue
         }
     }
 
-    public class Startup1 // web host builder
-    {
-        public virtual IServiceProvider ConfigureServices(IServiceCollection services)
-        {
-            ContainerBuilder builder = new ContainerBuilder();
-
-            builder.Populate(services);
-
-            IContainer container = builder.Build();
-
-            return new AutofacServiceProvider(container);
-        }
-
-        public void Configure(IApplicationBuilder app)
-        {
-            app.UseRouting();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
-            });
-        }
-    }
-
     public class Startup2 // generic host
     {
-        public void ConfigureContainer(ContainerBuilder builder)
+        public void ConfigureContainer(IContainer container)
         {
 
-        }
+        } 
 
         public virtual void ConfigureServices(IServiceCollection services)
         {
