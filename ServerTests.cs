@@ -1,5 +1,3 @@
-using Autofac;
-using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -57,7 +55,6 @@ namespace AspIntegrationTestMemoryLeakIssue
         public async Task TestServerTest_GenericHost()
         {
             using IHost host = new HostBuilder()
-                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureWebHostDefaults(webHostBuilder =>
                 {
                     webHostBuilder
@@ -92,17 +89,6 @@ namespace AspIntegrationTestMemoryLeakIssue
             GCContainer.References.Add(new WeakReference(this));
         }
 
-        public virtual IServiceProvider ConfigureServices(IServiceCollection services)
-        {
-            ContainerBuilder builder = new ContainerBuilder();
-
-            builder.Populate(services);
-
-            IContainer container = builder.Build();
-
-            return new AutofacServiceProvider(container);
-        }
-
         public void Configure(IApplicationBuilder app)
         {
             app.UseRouting();
@@ -122,11 +108,6 @@ namespace AspIntegrationTestMemoryLeakIssue
         public Startup2()
         {
             GCContainer.References.Add(new WeakReference(this));
-        }
-
-        public void ConfigureContainer(ContainerBuilder builder)
-        {
-
         }
 
         public virtual void ConfigureServices(IServiceCollection services)
